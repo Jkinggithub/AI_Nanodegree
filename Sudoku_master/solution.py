@@ -2,8 +2,8 @@ assignments = []
 
 rows = 'ABCDEFGHI'
 cols = '123456789'
-diagonal_1 = ['A1','B2','C3','D4','E5','F6','G7','H8','I9']
-diagonal_2 = ['I1','H2','G3','F4','E5','D6','C7','B8','A9']
+diagonal_1 = ['A1','B2','C3','D4','E5','F6','G7','H8','I9']         #local constriants for diagonal position
+diagonal_2 = ['I1','H2','G3','F4','E5','D6','C7','B8','A9']         #local constriants for diagonal position 
 
 def cross(A, B):
     "Cross product of elements in A and elements in B."
@@ -14,8 +14,8 @@ boxes = cross(rows, cols)
 row_units = [cross(r, cols) for r in rows]
 column_units = [cross(rows, c) for c in cols]
 square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
-diagonal_1_units = dict((s, None) for s in diagonal_1)
-diagonal_2_units = dict((s, None) for s in diagonal_2)
+diagonal_1_units = dict((s, None) for s in diagonal_1)              #initial the diagonal position 1 as a dict
+diagonal_2_units = dict((s, None) for s in diagonal_2)              #initial the diagonal position 2 as a dict
 
 unitlist = row_units + column_units + square_units
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
@@ -41,26 +41,21 @@ def naked_twins(values):
     """
 
     # Find all instances of naked twins
-    #print('before %%%%%%%%%%%%%%%%%%%%% ')
-    #display(values)
     for unit in unitlist:
-        #wins = [box for box in unit if (len(values[box]) == 2) and unit.count(values[box])==2]
         naked_twins = []
-        for box in unit:
-            if (len(values[box]) == 2):
+        for box in unit:                        
+            if (len(values[box]) == 2):     # local constraints for length ==2
                 for pair in unit:
-                    if values[box] == values[pair] and box != pair:
+                    if values[box] == values[pair] and box != pair:     #local constraints for pair box have same value but different position
                         naked_twins.append(box)
-       # print(naked_twins)
-       # print(values['F3'])
         for naked_twin in naked_twins:
             for box in unit: 
                 if box not in naked_twins:
                     #print(box)
-                    values[box] = values[box].replace(values[naked_twin][0],'')
+                    values[box] = values[box].replace(values[naked_twin][0],'')     #replace the first character of the nake_twins string
                     #print (naked_twin[0])
                     #print (values[box])
-                    values[box] = values[box].replace(values[naked_twin][1],'')
+                    values[box] = values[box].replace(values[naked_twin][1],'')    #replace the second character of the nake_twins string 
                     #print (naked_twin[1])
                     #print (values[box])
     return values
@@ -108,10 +103,10 @@ def eliminate(values):
             values[peer] = values[peer].replace(digit,'')
         if box in diagonal_1_units:
             for diagonal_1_unit in diagonal_1_units:
-                if diagonal_1_unit == box:
+                if diagonal_1_unit == box:                          #box will not be replaced for twice.
                     continue
                 else:
-                    values[diagonal_1_unit] = values[diagonal_1_unit].replace(digit,'')
+                    values[diagonal_1_unit] = values[diagonal_1_unit].replace(digit,'')  #eliminate and update box 
         if box in diagonal_2_units:
             for diagonal_2_unit in diagonal_2_units:
                 if diagonal_2_unit == box:
@@ -127,13 +122,13 @@ def only_choice(values):
             if len(dplaces) == 1:
                 values[dplaces[0]] = digit
     for digit in '123456789':
-        dplaces = [box for box in diagonal_1_units.keys() if digit in values[box]]
+        dplaces = [box for box in diagonal_1_units.keys() if digit in values[box]]  #choose box from diagonal postion 1
         if len(dplaces) == 1:
-            values[dplaces[0]] = digit
+            values[dplaces[0]] = digit                                              #do only_choice to peered box in diagonal position 1
     for digit in '123456789':
-        dplaces = [box for box in diagonal_2_units.keys() if digit in values[box]]
+        dplaces = [box for box in diagonal_2_units.keys() if digit in values[box]]  #choose box from diagonal postion 1
         if len(dplaces) == 1:
-            values[dplaces[0]] = digit
+            values[dplaces[0]] = digit                                              #do only_choice to peered box in diagonal position 2
     return values
 
 def reduce_puzzle(values):
